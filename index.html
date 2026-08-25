@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- CRITICAL FOR MOBILE: Tells the browser to match the device width and scale -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment Portal</title>
+  <style>
+    /* Base styles & Reset */
+    * { 
+      box-sizing: border-box; /* Ensures padding doesn't push elements off-screen */
+    }
+    
+    body { 
+      /* Uses native system fonts for a clean, app-like feel */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+      margin: 0; 
+      padding: 15px; 
+      background-color: #f4f7f6; 
+    }
+    
+    /* Navigation (Flexbox for mobile spacing) */
+    .nav { 
+      display: flex; 
+      justify-content: center; 
+      gap: 10px; 
+      margin-bottom: 20px; 
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .nav button { 
+      flex: 1; /* Makes buttons stretch evenly */
+      background-color: #ddd; 
+      color: #333; 
+      padding: 12px 10px; /* Larger touch target */
+      border: none; 
+      cursor: pointer; 
+      font-size: 16px; 
+      border-radius: 8px; 
+      font-weight: 600;
+      transition: background-color 0.2s;
+    }
+    .nav button.active { background-color: #4CAF50; color: white; }
+    
+    /* Main Container */
+    .container { 
+      width: 100%;
+      max-width: 600px; 
+      margin: auto; 
+      background: white; 
+      padding: 25px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+    }
+    
+    h2 { 
+      color: #333; 
+      border-bottom: 2px solid #4CAF50; 
+      padding-bottom: 10px; 
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+    
+    /* Form Elements */
+    .form-group { margin-bottom: 18px; }
+    label { 
+      display: block; 
+      font-weight: bold; 
+      margin-bottom: 8px; 
+      color: #444; 
+      font-size: 0.95rem;
+    }
+    
+    /* Inputs and Textareas */
+    input[type="text"], 
+    input[type="password"], 
+    input[type="number"], 
+    textarea { 
+      width: 100%; 
+      padding: 14px; /* Larger padding for mobile typing */
+      border: 1px solid #ccc; 
+      border-radius: 8px; 
+      font-family: inherit; 
+      /* 16px is critical on mobile to prevent iOS Safari from auto-zooming */
+      font-size: 16px; 
+      background-color: #fafafa;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #4CAF50;
+      background-color: #fff;
+      box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+    }
+    
+    /* Submit Button */
+    button.submit-btn { 
+      background-color: #4CAF50; 
+      color: white; 
+      padding: 16px 20px; /* Tall button for easy thumb tapping */
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-size: 16px; 
+      font-weight: bold;
+      width: 100%; 
+      margin-top: 10px;
+      transition: background-color 0.2s;
+    }
+    button.submit-btn:hover { background-color: #45a049; }
+    button:disabled { background-color: #999; cursor: not-allowed; }
+    
+    /* Messages & Cards */
+    .message { margin-top: 15px; font-weight: bold; text-align: center; min-height: 20px; }
+    
+    .question-box { 
+      background: #fff3e0; 
+      padding: 15px; 
+      border-left: 5px solid #ff9800; 
+      margin-bottom: 25px; 
+      border-radius: 8px; 
+    }
+    .q-id-badge { 
+      background: #ff9800; 
+      color: white; 
+      padding: 4px 10px; 
+      border-radius: 12px; 
+      font-size: 12px; 
+      font-weight: bold;
+      margin-bottom: 10px; 
+      display: inline-block; 
+    }
+    #displayQuestionText { margin: 10px 0 0 0; font-size: 1.1rem; line-height: 1.5; }
+    
+    #resultCard { 
+      display: none; 
+      margin-top: 20px; 
+      padding: 20px; 
+      background: #e7f3fe; 
+      border-left: 6px solid #2196F3; 
+      border-radius: 8px; 
+      text-align: center;
+    }
+    #resultCard h3 { margin-top: 0; color: #0d47a1; }
+    .score-highlight { font-size: 32px; font-weight: bold; color: #d32f2f; display: block; margin: 10px 0; }
+    
+    #adminView { display: none; }
+
+    /* Media Queries for very small screens (Phones) */
+    @media (max-width: 480px) {
+      body { padding: 10px; }
+      .container { padding: 20px 15px; }
+      h2 { font-size: 1.3rem; }
+      .nav button { font-size: 14px; padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="nav">
+  <button id="btnStudent" class="active" onclick="switchView('student')">Student View</button>
+  <button id="btnAdmin" onclick="switchView('admin')">Admin View</button>
+</div>
+
+<!-- STUDENT VIEW -->
+<div class="container" id="studentView">
+  <h2>Student Assessment</h2>
+  
+  <div class="question-box">
+    <span class="q-id-badge" id="displayQuestionId">Loading...</span>
+    <strong>Current Question:</strong>
+    <p id="displayQuestionText">Loading question...</p>
+    <input type="hidden" id="currentQuestionIdValue">
+  </div>
+
+  <div class="form-group">
+    <label>Student ID:</label>
+    <input type="text" id="studentId" placeholder="e.g. 123456">
+  </div>
+  <div class="form-group">
+    <label>Full Name:</label>
+    <input type="text" id="fullName" placeholder="John Doe">
+  </div>
+  <div class="form-group">
+    <label>Your Answer:</label>
+    <textarea id="answer" rows="5" placeholder="Type your answer here..."></textarea>
+  </div>
+  
+  <button class="submit-btn" onclick="submitStudentAnswer()" id="studentSubmitBtn">Submit Answer</button>
+  <p class="message" id="studentMessage"></p>
+
+  <div id="resultCard">
+    <h3>Marking Complete</h3>
+    <p>Your Score:</p>
+    <span class="score-highlight" id="scoreDisplay"></span>
+    <p id="successText" style="color: green; font-weight: bold; margin-bottom: 0;"></p>
+  </div>
+</div>
+
+<!-- ADMIN VIEW -->
+<div class="container" id="adminView">
+  <h2>Admin: Add New Question</h2>
+  
+  <div class="form-group">
+    <label>Admin Password:</label>
+    <input type="password" id="adminPassword" placeholder="Enter password">
+  </div>
+  <div class="form-group">
+    <label>Question ID:</label>
+    <input type="text" id="qId" placeholder="e.g. Q1">
+  </div>
+  <div class="form-group">
+    <label>Question Text:</label>
+    <textarea id="qText" rows="3" placeholder="What is photosynthesis?"></textarea>
+  </div>
+  <div class="form-group">
+    <label>Rubric Keywords (comma separated):</label>
+    <input type="text" id="qRubric" placeholder="light, water, carbon dioxide">
+  </div>
+  <div class="form-group">
+    <label>Maximum Mark:</label>
+    <input type="number" id="qMaxMark" placeholder="10" value="10">
+  </div>
+  
+  <button class="submit-btn" onclick="submitNewQuestion()" id="adminSubmitBtn">Publish Question</button>
+  <p class="message" id="adminMessage"></p>
+</div>
+
+<script>
+  // IMPORTANT: Paste your Apps Script Web App URL here
+  const SCRIPT_URL = 'YOUR_WEB_APP_URL_HERE'; 
+
+  function switchView(view) {
+    document.getElementById('studentView').style.display = view === 'student' ? 'block' : 'none';
+    document.getElementById('adminView').style.display = view === 'admin' ? 'block' : 'none';
+    document.getElementById('btnStudent').className = view === 'student' ? 'active' : '';
+    document.getElementById('btnAdmin').className = view === 'admin' ? 'active' : '';
+  }
+
+  window.onload = function() {
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getQuestion' }),
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.status === 'success') {
+        document.getElementById('displayQuestionText').innerText = data.question.questionText;
+        document.getElementById('displayQuestionId').innerText = data.question.questionId;
+        document.getElementById('currentQuestionIdValue').value = data.question.questionId;
+      }
+    })
+    .catch(err => {
+      document.getElementById('displayQuestionText').innerText = "Failed to load question.";
+    });
+  };
+
+  function submitStudentAnswer() {
+    const studentId = document.getElementById('studentId').value.trim();
+    const fullName = document.getElementById('fullName').value.trim();
+    const answer = document.getElementById('answer').value.trim();
+    const questionId = document.getElementById('currentQuestionIdValue').value; 
+    
+    const msgEl = document.getElementById('studentMessage');
+    const btn = document.getElementById('studentSubmitBtn');
+    const resultCard = document.getElementById('resultCard');
+    
+    if(!studentId || !fullName || !answer) {
+      msgEl.innerText = "Please fill in all fields."; msgEl.style.color = "#d32f2f"; return;
+    }
+    
+    resultCard.style.display = "none";
+    msgEl.innerText = "Submitting and marking..."; msgEl.style.color = "#2196F3";
+    btn.disabled = true;
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'submitAnswer', studentId: studentId, fullName: fullName, answer: answer, questionId: questionId }),
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.status === 'success') {
+        msgEl.innerText = "";
+        resultCard.style.display = "block";
+        document.getElementById('scoreDisplay').innerText = data.scoreData.score + " / " + data.scoreData.maxScore;
+        document.getElementById('successText').innerText = data.scoreData.message;
+        
+        document.getElementById('answer').value = ''; 
+      } else {
+        msgEl.innerText = data.message; msgEl.style.color = "#d32f2f";
+      }
+    })
+    .catch(error => {
+      msgEl.innerText = "Submission failed."; msgEl.style.color = "#d32f2f";
+    })
+    .finally(() => btn.disabled = false );
+  }
+
+  function submitNewQuestion() {
+    const password = document.getElementById('adminPassword').value;
+    const qId = document.getElementById('qId').value.trim();
+    const qText = document.getElementById('qText').value.trim();
+    const qRubric = document.getElementById('qRubric').value.trim();
+    const qMaxMark = document.getElementById('qMaxMark').value;
+    
+    const msgEl = document.getElementById('adminMessage');
+    const btn = document.getElementById('adminSubmitBtn');
+    
+
+    if(!password || !qId || !qText || !qRubric || !qMaxMark) {
+      msgEl.innerText = "Please fill in all fields."; msgEl.style.color = "#d32f2f"; return;
+    }
+    
+    msgEl.innerText = "Publishing question..."; msgEl.style.color = "#2196F3";
+    btn.disabled = true;
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'addQuestion', password: password, questionId: qId, questionText: qText, rubric: qRubric, maxMark: qMaxMark }),
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.status === 'success') {
+        msgEl.innerText = data.message; msgEl.style.color = "#4CAF50";
+        document.getElementById('qId').value = '';
+        document.getElementById('qText').value = '';
+        document.getElementById('qRubric').value = '';
+        
+        document.getElementById('displayQuestionText').innerText = qText;
+        document.getElementById('displayQuestionId').innerText = qId;
+        document.getElementById('currentQuestionIdValue').value = qId;
+      } else {
+        msgEl.innerText = "Error: " + data.message; msgEl.style.color = "#d32f2f";
+      }
+    })
+    .catch(error => {
+      msgEl.innerText = "Failed to publish question."; msgEl.style.color = "#d32f2f";
+    })
+    .finally(() => btn.disabled = false );
+  }
+</script>
+
+</body>
+</html>
