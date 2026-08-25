@@ -1,347 +1,2060 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
-  <!-- CRITICAL FOR MOBILE: Tells the browser to match the device width and scale -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Assessment Portal</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Student Assessment Portal</title>
+
+
   <style>
-    /* Base styles & Reset */
-    * { 
-      box-sizing: border-box; /* Ensures padding doesn't push elements off-screen */
+
+    * {
+      box-sizing: border-box;
     }
-    
-    body { 
-      /* Uses native system fonts for a clean, app-like feel */
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-      margin: 0; 
-      padding: 15px; 
-      background-color: #f4f7f6; 
+
+
+    body {
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+      margin: 0;
+
+      padding: 15px;
+
+      background-color: #f4f7f6;
+
+      color: #333;
     }
-    
-    /* Navigation (Flexbox for mobile spacing) */
-    .nav { 
-      display: flex; 
-      justify-content: center; 
-      gap: 10px; 
-      margin-bottom: 20px; 
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .nav button { 
-      flex: 1; /* Makes buttons stretch evenly */
-      background-color: #ddd; 
-      color: #333; 
-      padding: 12px 10px; /* Larger touch target */
-      border: none; 
-      cursor: pointer; 
-      font-size: 16px; 
-      border-radius: 8px; 
-      font-weight: 600;
-      transition: background-color 0.2s;
-    }
-    .nav button.active { background-color: #4CAF50; color: white; }
-    
-    /* Main Container */
-    .container { 
+
+
+    .container {
+
       width: 100%;
-      max-width: 600px; 
-      margin: auto; 
-      background: white; 
-      padding: 25px; 
-      border-radius: 12px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+
+      max-width: 650px;
+
+      margin: 40px auto;
+
+      background: white;
+
+      padding: 25px;
+
+      border-radius: 12px;
+
+      box-shadow:
+        0 4px 12px rgba(0,0,0,0.08);
     }
-    
-    h2 { 
-      color: #333; 
-      border-bottom: 2px solid #4CAF50; 
-      padding-bottom: 10px; 
+
+
+    h2 {
+
+      color: #333;
+
+      border-bottom:
+        2px solid #4CAF50;
+
+      padding-bottom: 10px;
+
       margin-top: 0;
+
       font-size: 1.5rem;
     }
-    
-    /* Form Elements */
-    .form-group { margin-bottom: 18px; }
-    label { 
-      display: block; 
-      font-weight: bold; 
-      margin-bottom: 8px; 
-      color: #444; 
+
+
+    h3 {
+
+      margin-top: 0;
+    }
+
+
+    .form-group {
+
+      margin-bottom: 18px;
+    }
+
+
+    label {
+
+      display: block;
+
+      font-weight: bold;
+
+      margin-bottom: 8px;
+
+      color: #444;
+
       font-size: 0.95rem;
     }
-    
-    /* Inputs and Textareas */
-    input[type="text"], 
-    input[type="password"], 
-    input[type="number"], 
-    textarea { 
-      width: 100%; 
-      padding: 14px; /* Larger padding for mobile typing */
-      border: 1px solid #ccc; 
-      border-radius: 8px; 
-      font-family: inherit; 
-      /* 16px is critical on mobile to prevent iOS Safari from auto-zooming */
-      font-size: 16px; 
+
+
+    input[type="text"],
+    textarea {
+
+      width: 100%;
+
+      padding: 14px;
+
+      border:
+        1px solid #ccc;
+
+      border-radius: 8px;
+
+      font-family: inherit;
+
+      font-size: 16px;
+
       background-color: #fafafa;
+
+      transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
     }
-    input:focus, textarea:focus {
+
+
+    input[type="text"]:focus,
+    textarea:focus {
+
       outline: none;
+
       border-color: #4CAF50;
+
       background-color: #fff;
-      box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+
+      box-shadow:
+        0 0 0 2px
+        rgba(76,175,80,0.2);
     }
-    
-    /* Submit Button */
-    button.submit-btn { 
-      background-color: #4CAF50; 
-      color: white; 
-      padding: 16px 20px; /* Tall button for easy thumb tapping */
-      border: none; 
-      border-radius: 8px; 
-      cursor: pointer; 
-      font-size: 16px; 
+
+
+    textarea {
+
+      resize: vertical;
+
+      min-height: 150px;
+
+      line-height: 1.5;
+    }
+
+
+    .char-counter {
+
+      text-align: right;
+
+      font-size: 0.85rem;
+
+      color: #777;
+
+      margin-top: 5px;
+
       font-weight: bold;
-      width: 100%; 
+    }
+
+
+    .char-counter.over-limit {
+
+      color: #d32f2f;
+    }
+
+
+    button.primary-btn {
+
+      background-color: #4CAF50;
+
+      color: white;
+
+      padding: 16px 20px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      cursor: pointer;
+
+      font-size: 16px;
+
+      font-weight: bold;
+
+      width: 100%;
+
       margin-top: 10px;
-      transition: background-color 0.2s;
+
+      transition:
+        background-color 0.2s,
+        opacity 0.2s;
     }
-    button.submit-btn:hover { background-color: #45a049; }
-    button:disabled { background-color: #999; cursor: not-allowed; }
-    
-    /* Messages & Cards */
-    .message { margin-top: 15px; font-weight: bold; text-align: center; min-height: 20px; }
-    
-    .question-box { 
-      background: #fff3e0; 
-      padding: 15px; 
-      border-left: 5px solid #ff9800; 
-      margin-bottom: 25px; 
-      border-radius: 8px; 
+
+
+    button.primary-btn:hover {
+
+      background-color: #45a049;
     }
-    .q-id-badge { 
-      background: #ff9800; 
-      color: white; 
-      padding: 4px 10px; 
-      border-radius: 12px; 
-      font-size: 12px; 
+
+
+    button.primary-btn:disabled {
+
+      background-color: #999;
+
+      cursor: not-allowed;
+
+      opacity: 0.8;
+    }
+
+
+    button.retry-btn {
+
+      background-color: #ff9800;
+    }
+
+
+    button.retry-btn:hover {
+
+      background-color: #f57c00;
+    }
+
+
+    button.next-btn {
+
+      background-color: #2196F3;
+    }
+
+
+    button.next-btn:hover {
+
+      background-color: #1976D2;
+    }
+
+
+    .message {
+
+      margin-top: 15px;
+
       font-weight: bold;
-      margin-bottom: 10px; 
-      display: inline-block; 
+
+      text-align: center;
+
+      min-height: 20px;
+
+      line-height: 1.5;
     }
-    #displayQuestionText { margin: 10px 0 0 0; font-size: 1.1rem; line-height: 1.5; }
-    
-    #resultCard { 
-      display: none; 
-      margin-top: 20px; 
-      padding: 20px; 
-      background: #e7f3fe; 
-      border-left: 6px solid #2196F3; 
-      border-radius: 8px; 
+
+
+    .question-box {
+
+      background: #fff3e0;
+
+      padding: 15px;
+
+      border-left:
+        5px solid #ff9800;
+
+      margin-bottom: 25px;
+
+      border-radius: 8px;
+    }
+
+
+    .q-id-badge {
+
+      background: #ff9800;
+
+      color: white;
+
+      padding: 4px 10px;
+
+      border-radius: 12px;
+
+      font-size: 12px;
+
+      font-weight: bold;
+
+      margin-bottom: 10px;
+
+      display: inline-block;
+    }
+
+
+    #displayQuestionText {
+
+      margin: 10px 0 0 0;
+
+      font-size: 1.1rem;
+
+      line-height: 1.6;
+
+      white-space: pre-wrap;
+    }
+
+
+    /* ---------------------------------------
+       STUDENT INFORMATION
+    --------------------------------------- */
+
+    .student-info {
+
+      background: #f5f5f5;
+
+      padding: 10px 12px;
+
+      border-radius: 8px;
+
+      margin-bottom: 20px;
+
+      font-size: 0.9rem;
+
+      color: #555;
+    }
+
+
+    .student-info strong {
+
+      color: #333;
+    }
+
+
+    /* ---------------------------------------
+       RESULT CARD
+    --------------------------------------- */
+
+    #resultCard {
+
+      display: none;
+
+      margin-top: 25px;
+
+      padding: 20px;
+
+      border-radius: 10px;
+
       text-align: center;
     }
-    #resultCard h3 { margin-top: 0; color: #0d47a1; }
-    .score-highlight { font-size: 32px; font-weight: bold; color: #d32f2f; display: block; margin: 10px 0; }
-    
-    #adminView { display: none; }
 
-    /* Media Queries for very small screens (Phones) */
-    @media (max-width: 480px) {
-      body { padding: 10px; }
-      .container { padding: 20px 15px; }
-      h2 { font-size: 1.3rem; }
-      .nav button { font-size: 14px; padding: 10px; }
+
+    #resultCard.pass {
+
+      background: #e8f5e9;
+
+      border-left:
+        6px solid #4CAF50;
     }
+
+
+    #resultCard.fail {
+
+      background: #fff3e0;
+
+      border-left:
+        6px solid #ff9800;
+    }
+
+
+    #resultCard h3 {
+
+      margin-bottom: 10px;
+    }
+
+
+    #resultCard.pass h3 {
+
+      color: #2e7d32;
+    }
+
+
+    #resultCard.fail h3 {
+
+      color: #e65100;
+    }
+
+
+    .attempt-display {
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      color: #555;
+
+      margin: 5px 0 15px 0;
+    }
+
+
+    .score-label {
+
+      margin-bottom: 5px;
+    }
+
+
+    .score-highlight {
+
+      font-size: 34px;
+
+      font-weight: bold;
+
+      display: block;
+
+      margin: 8px 0 15px 0;
+    }
+
+
+    #resultCard.pass .score-highlight {
+
+      color: #2e7d32;
+    }
+
+
+    #resultCard.fail .score-highlight {
+
+      color: #e65100;
+    }
+
+
+    .passing-grade {
+
+      font-size: 14px;
+
+      color: #666;
+
+      margin-bottom: 20px;
+    }
+
+
+    /* ---------------------------------------
+       FEEDBACK
+    --------------------------------------- */
+
+    .feedback-box {
+
+      text-align: left;
+
+      background: white;
+
+      padding: 15px;
+
+      border-radius: 8px;
+
+      margin-top: 15px;
+
+      margin-bottom: 20px;
+
+      line-height: 1.6;
+
+      border: 1px solid #ddd;
+    }
+
+
+    .feedback-title {
+
+      font-weight: bold;
+
+      margin-bottom: 8px;
+
+      color: #444;
+    }
+
+
+    #feedbackDisplay {
+
+      margin: 0;
+
+      white-space: pre-wrap;
+    }
+
+
+    /* ---------------------------------------
+       STATUS BADGE
+    --------------------------------------- */
+
+    .status-badge {
+
+      display: inline-block;
+
+      padding: 6px 18px;
+
+      border-radius: 20px;
+
+      font-weight: bold;
+
+      font-size: 14px;
+
+      margin-bottom: 10px;
+    }
+
+
+    .status-pass {
+
+      background: #c8e6c9;
+
+      color: #1b5e20;
+    }
+
+
+    .status-fail {
+
+      background: #ffe0b2;
+
+      color: #e65100;
+    }
+
+
+    /* ---------------------------------------
+       ALL DONE
+    --------------------------------------- */
+
+    #allDoneSection {
+
+      display: none;
+
+      text-align: center;
+
+      padding: 30px 10px;
+    }
+
+
+    #allDoneSection h3 {
+
+      color: #4CAF50;
+
+      font-size: 1.4rem;
+    }
+
+
+    .done-icon {
+
+      font-size: 45px;
+
+      margin-bottom: 10px;
+    }
+
+
+    /* ---------------------------------------
+       LOADING
+    --------------------------------------- */
+
+    .loading-text {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 8px;
+    }
+
+
+    .spinner {
+
+      width: 15px;
+
+      height: 15px;
+
+      border:
+        2px solid rgba(255,255,255,0.4);
+
+      border-top-color: white;
+
+      border-radius: 50%;
+
+      animation:
+        spin 0.8s linear infinite;
+    }
+
+
+    @keyframes spin {
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+
+    /* ---------------------------------------
+       HIDDEN ELEMENT
+    --------------------------------------- */
+
+    #assessmentSection,
+    #allDoneSection {
+
+      display: none;
+    }
+
+
+    /* ---------------------------------------
+       MOBILE
+    --------------------------------------- */
+
+    @media (max-width: 480px) {
+
+      body {
+        padding: 10px;
+      }
+
+
+      .container {
+
+        padding: 20px 15px;
+
+        margin: 20px auto;
+      }
+
+
+      h2 {
+
+        font-size: 1.3rem;
+      }
+
+
+      #displayQuestionText {
+
+        font-size: 1rem;
+      }
+
+
+      .score-highlight {
+
+        font-size: 30px;
+      }
+    }
+
   </style>
+
 </head>
+
+
 <body>
 
-<div class="nav">
-  <button id="btnStudent" class="active" onclick="switchView('student')">Student View</button>
-  <button id="btnAdmin" onclick="switchView('admin')">Admin View</button>
+
+<div class="container">
+
+
+  <h2>
+    Student Assessment
+  </h2>
+
+
+  <!-- =====================================================
+       STEP 1: LOGIN
+  ====================================================== -->
+
+  <div id="loginSection">
+
+    <p>
+      Please enter your details to start the assessment.
+    </p>
+
+
+    <div class="form-group">
+
+      <label for="studentId">
+        Student ID:
+      </label>
+
+      <input
+        type="text"
+        id="studentId"
+        placeholder="e.g. 123456"
+        autocomplete="off"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="fullName">
+        Full Name:
+      </label>
+
+      <input
+        type="text"
+        id="fullName"
+        placeholder="e.g. John Doe"
+        autocomplete="name"
+      >
+
+    </div>
+
+
+    <button
+      class="primary-btn"
+      onclick="fetchNextQuestion()"
+      id="loginBtn"
+    >
+      Start Assessment
+    </button>
+
+
+    <p
+      class="message"
+      id="loginMessage"
+    ></p>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       STEP 2: ASSESSMENT
+  ====================================================== -->
+
+  <div id="assessmentSection">
+
+
+    <!-- STUDENT INFORMATION -->
+
+    <div
+      class="student-info"
+      id="studentInfo"
+    >
+    </div>
+
+
+    <!-- QUESTION -->
+
+    <div class="question-box">
+
+      <span
+        class="q-id-badge"
+        id="displayQuestionId"
+      ></span>
+
+
+      <strong>
+        Current Question:
+      </strong>
+
+
+      <p
+        id="displayQuestionText"
+      ></p>
+
+
+      <input
+        type="hidden"
+        id="currentQuestionIdValue"
+      >
+
+    </div>
+
+
+
+    <!-- ANSWER -->
+
+    <div class="form-group">
+
+      <label for="answer">
+        Your Answer:
+      </label>
+
+
+      <textarea
+        id="answer"
+        rows="8"
+        placeholder="Type your answer here..."
+        maxlength="50000"
+      ></textarea>
+
+
+      <div
+        class="char-counter"
+        id="charCounter"
+      >
+        0 / 50,000 characters
+      </div>
+
+    </div>
+
+
+
+    <!-- SUBMIT -->
+
+    <button
+      class="primary-btn"
+      onclick="submitStudentAnswer()"
+      id="studentSubmitBtn"
+    >
+      Submit Answer
+    </button>
+
+
+    <p
+      class="message"
+      id="studentMessage"
+    ></p>
+
+
+
+    <!-- =================================================
+         RESULT CARD
+    ================================================== -->
+
+    <div
+      id="resultCard"
+    >
+
+
+      <h3 id="resultTitle">
+        Marking Complete
+      </h3>
+
+
+      <div
+        id="statusBadge"
+        class="status-badge"
+      >
+      </div>
+
+
+      <!-- IMPORTANT:
+           Attempt comes directly from Apps Script.
+           There is NO frontend attempt counter.
+      -->
+
+      <div
+        class="attempt-display"
+        id="attemptDisplay"
+      >
+      </div>
+
+
+      <p class="score-label">
+        Your Score:
+      </p>
+
+
+      <span
+        class="score-highlight"
+        id="scoreDisplay"
+      >
+      </span>
+
+
+      <div
+        class="passing-grade"
+        id="passingGradeDisplay"
+      >
+      </div>
+
+
+
+      <!-- FEEDBACK -->
+
+      <div
+        class="feedback-box"
+      >
+
+        <div class="feedback-title">
+          Feedback:
+        </div>
+
+
+        <p
+          id="feedbackDisplay"
+        ></p>
+
+      </div>
+
+
+
+      <p
+        id="successText"
+        style="
+          font-weight: bold;
+          margin-bottom: 15px;
+        "
+      >
+      </p>
+
+
+
+      <!-- RETRY BUTTON -->
+
+      <button
+        class="primary-btn retry-btn"
+        onclick="retrySameQuestion()"
+        id="retryBtn"
+        style="display:none;"
+      >
+        Retry Same Question
+      </button>
+
+
+
+      <!-- NEXT QUESTION BUTTON -->
+
+      <button
+        class="primary-btn next-btn"
+        onclick="fetchNextQuestion()"
+        id="nextQuestionBtn"
+        style="display:none;"
+      >
+        Load Next Question
+      </button>
+
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       STEP 3: ALL DONE
+  ====================================================== -->
+
+  <div
+    id="allDoneSection"
+  >
+
+    <div class="done-icon">
+      🎉
+    </div>
+
+
+    <h3>
+      Congratulations!
+    </h3>
+
+
+    <p>
+      You have successfully completed
+      all available questions.
+    </p>
+
+
+    <p>
+      All required questions have been passed.
+    </p>
+
+  </div>
+
+
 </div>
 
-<!-- STUDENT VIEW -->
-<div class="container" id="studentView">
-  <h2>Student Assessment</h2>
-  
-  <div class="question-box">
-    <span class="q-id-badge" id="displayQuestionId">Loading...</span>
-    <strong>Current Question:</strong>
-    <p id="displayQuestionText">Loading question...</p>
-    <input type="hidden" id="currentQuestionIdValue">
-  </div>
 
-  <div class="form-group">
-    <label>Student ID:</label>
-    <input type="text" id="studentId" placeholder="e.g. 123456">
-  </div>
-  <div class="form-group">
-    <label>Full Name:</label>
-    <input type="text" id="fullName" placeholder="John Doe">
-  </div>
-  <div class="form-group">
-    <label>Your Answer:</label>
-    <textarea id="answer" rows="5" placeholder="Type your answer here..."></textarea>
-  </div>
-  
-  <button class="submit-btn" onclick="submitStudentAnswer()" id="studentSubmitBtn">Submit Answer</button>
-  <p class="message" id="studentMessage"></p>
-
-  <div id="resultCard">
-    <h3>Marking Complete</h3>
-    <p>Your Score:</p>
-    <span class="score-highlight" id="scoreDisplay"></span>
-    <p id="successText" style="color: green; font-weight: bold; margin-bottom: 0;"></p>
-  </div>
-</div>
-
-<!-- ADMIN VIEW -->
-<div class="container" id="adminView">
-  <h2>Admin: Add New Question</h2>
-  
-  <div class="form-group">
-    <label>Admin Password:</label>
-    <input type="password" id="adminPassword" placeholder="Enter password">
-  </div>
-  <div class="form-group">
-    <label>Question ID:</label>
-    <input type="text" id="qId" placeholder="e.g. Q1">
-  </div>
-  <div class="form-group">
-    <label>Question Text:</label>
-    <textarea id="qText" rows="3" placeholder="What is photosynthesis?"></textarea>
-  </div>
-  <div class="form-group">
-    <label>Rubric Keywords (comma separated):</label>
-    <input type="text" id="qRubric" placeholder="light, water, carbon dioxide">
-  </div>
-  <div class="form-group">
-    <label>Maximum Mark:</label>
-    <input type="number" id="qMaxMark" placeholder="10" value="10">
-  </div>
-  
-  <button class="submit-btn" onclick="submitNewQuestion()" id="adminSubmitBtn">Publish Question</button>
-  <p class="message" id="adminMessage"></p>
-</div>
 
 <script>
-  // IMPORTANT: Paste your Apps Script Web App URL here
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzMzE2-Ekpb5sDg2uHoayDPRKZUXgJJDvsAR_F8l9RyJV_7YbKM_rZj2oJwhiyxmEK3/exec'; 
 
-  function switchView(view) {
-    document.getElementById('studentView').style.display = view === 'student' ? 'block' : 'none';
-    document.getElementById('adminView').style.display = view === 'admin' ? 'block' : 'none';
-    document.getElementById('btnStudent').className = view === 'student' ? 'active' : '';
-    document.getElementById('btnAdmin').className = view === 'admin' ? 'active' : '';
+
+// ============================================================
+// CONFIGURATION
+// ============================================================
+
+const SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbzc-3bJhr3-79deJ4jaUx8xw6ZdcADXY4h8LALRf3hZh4XhEPMyaAYwhuxEJe1h95MW/exec';
+
+
+const MAX_CHARS =
+  50000;
+
+
+// ============================================================
+// DOM ELEMENTS
+// ============================================================
+
+const answerInput =
+  document.getElementById('answer');
+
+
+const charCounter =
+  document.getElementById('charCounter');
+
+
+const submitBtn =
+  document.getElementById('studentSubmitBtn');
+
+
+// ============================================================
+// FETCH NEXT QUESTION
+// ============================================================
+
+function fetchNextQuestion() {
+
+
+  const studentId =
+    document
+      .getElementById('studentId')
+      .value
+      .trim();
+
+
+  const fullName =
+    document
+      .getElementById('fullName')
+      .value
+      .trim();
+
+
+  const msgEl =
+    document.getElementById('loginMessage');
+
+
+  const loginBtn =
+    document.getElementById('loginBtn');
+
+
+  // ----------------------------------------------------------
+  // VALIDATION
+  // ----------------------------------------------------------
+
+  if (!studentId || !fullName) {
+
+    msgEl.innerText =
+      "Please enter both Student ID and Full Name.";
+
+    msgEl.style.color =
+      "#d32f2f";
+
+    return;
   }
 
-  window.onload = function() {
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'getQuestion' }),
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.status === 'success') {
-        document.getElementById('displayQuestionText').innerText = data.question.questionText;
-        document.getElementById('displayQuestionId').innerText = data.question.questionId;
-        document.getElementById('currentQuestionIdValue').value = data.question.questionId;
-      }
-    })
-    .catch(err => {
-      document.getElementById('displayQuestionText').innerText = "Failed to load question.";
-    });
-  };
 
-  function submitStudentAnswer() {
-    const studentId = document.getElementById('studentId').value.trim();
-    const fullName = document.getElementById('fullName').value.trim();
-    const answer = document.getElementById('answer').value.trim();
-    const questionId = document.getElementById('currentQuestionIdValue').value; 
-    
-    const msgEl = document.getElementById('studentMessage');
-    const btn = document.getElementById('studentSubmitBtn');
-    const resultCard = document.getElementById('resultCard');
-    
-    if(!studentId || !fullName || !answer) {
-      msgEl.innerText = "Please fill in all fields."; msgEl.style.color = "#d32f2f"; return;
+  // ----------------------------------------------------------
+  // SHOW LOADING
+  // ----------------------------------------------------------
+
+  msgEl.innerHTML = `
+    <span
+      class="loading-text"
+      style="color:#2196F3;"
+    >
+      Finding your next question...
+    </span>
+  `;
+
+
+  loginBtn.disabled =
+    true;
+
+
+  // ----------------------------------------------------------
+  // SEND REQUEST
+  // ----------------------------------------------------------
+
+  fetch(
+
+    SCRIPT_URL,
+
+    {
+
+      method:
+        'POST',
+
+      body:
+        JSON.stringify({
+
+          action:
+            'getQuestion',
+
+          studentId:
+            studentId
+
+        }),
+
+      headers: {
+
+        'Content-Type':
+          'text/plain;charset=utf-8'
+      }
+
     }
-    
-    resultCard.style.display = "none";
-    msgEl.innerText = "Submitting and marking..."; msgEl.style.color = "#2196F3";
-    btn.disabled = true;
 
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'submitAnswer', studentId: studentId, fullName: fullName, answer: answer, questionId: questionId }),
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.status === 'success') {
-        msgEl.innerText = "";
-        resultCard.style.display = "block";
-        document.getElementById('scoreDisplay').innerText = data.scoreData.score + " / " + data.scoreData.maxScore;
-        document.getElementById('successText').innerText = data.scoreData.message;
-        
-        document.getElementById('answer').value = ''; 
-      } else {
-        msgEl.innerText = data.message; msgEl.style.color = "#d32f2f";
+  )
+
+  .then(
+
+    response => {
+
+      if (!response.ok) {
+
+        throw new Error(
+          `Server returned HTTP ${response.status}`
+        );
       }
-    })
-    .catch(error => {
-      msgEl.innerText = "Submission failed."; msgEl.style.color = "#d32f2f";
-    })
-    .finally(() => btn.disabled = false );
-  }
 
-  function submitNewQuestion() {
-    const password = document.getElementById('adminPassword').value;
-    const qId = document.getElementById('qId').value.trim();
-    const qText = document.getElementById('qText').value.trim();
-    const qRubric = document.getElementById('qRubric').value.trim();
-    const qMaxMark = document.getElementById('qMaxMark').value;
-    
-    const msgEl = document.getElementById('adminMessage');
-    const btn = document.getElementById('adminSubmitBtn');
-    
-
-    if(!password || !qId || !qText || !qRubric || !qMaxMark) {
-      msgEl.innerText = "Please fill in all fields."; msgEl.style.color = "#d32f2f"; return;
+      return response.json();
     }
-    
-    msgEl.innerText = "Publishing question..."; msgEl.style.color = "#2196F3";
-    btn.disabled = true;
 
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'addQuestion', password: password, questionId: qId, questionText: qText, rubric: qRubric, maxMark: qMaxMark }),
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(data.status === 'success') {
-        msgEl.innerText = data.message; msgEl.style.color = "#4CAF50";
-        document.getElementById('qId').value = '';
-        document.getElementById('qText').value = '';
-        document.getElementById('qRubric').value = '';
-        
-        document.getElementById('displayQuestionText').innerText = qText;
-        document.getElementById('displayQuestionId').innerText = qId;
-        document.getElementById('currentQuestionIdValue').value = qId;
-      } else {
-        msgEl.innerText = "Error: " + data.message; msgEl.style.color = "#d32f2f";
+  )
+
+  .then(
+
+    data => {
+
+
+      // ------------------------------------------------------
+      // SUCCESS
+      // ------------------------------------------------------
+
+      if (data.status === 'success') {
+
+
+        // ----------------------------------------------------
+        // ALL QUESTIONS COMPLETED
+        // ----------------------------------------------------
+
+        if (
+          data.question === "ALL_DONE" ||
+          data.question === null
+        ) {
+
+          document
+            .getElementById('loginSection')
+            .style.display =
+              "none";
+
+
+          document
+            .getElementById('assessmentSection')
+            .style.display =
+              "none";
+
+
+          document
+            .getElementById('allDoneSection')
+            .style.display =
+              "block";
+
+
+          return;
+        }
+
+
+
+        // ----------------------------------------------------
+        // DISPLAY ASSESSMENT
+        // ----------------------------------------------------
+
+        document
+          .getElementById('loginSection')
+          .style.display =
+            "none";
+
+
+        document
+          .getElementById('assessmentSection')
+          .style.display =
+            "block";
+
+
+        // Hide previous result
+
+        document
+          .getElementById('resultCard')
+          .style.display =
+            "none";
+
+
+        // ----------------------------------------------------
+        // STUDENT INFORMATION
+        // ----------------------------------------------------
+
+        document
+          .getElementById('studentInfo')
+          .innerHTML =
+
+          `<strong>Student:</strong> ${escapeHtml(fullName)}
+           &nbsp; | &nbsp;
+           <strong>ID:</strong> ${escapeHtml(studentId)}`;
+
+
+        // ----------------------------------------------------
+        // QUESTION INFORMATION
+        // ----------------------------------------------------
+
+        document
+          .getElementById('displayQuestionId')
+          .innerText =
+            data.question.questionId;
+
+
+        document
+          .getElementById('displayQuestionText')
+          .innerText =
+            data.question.questionText;
+
+
+        document
+          .getElementById('currentQuestionIdValue')
+          .value =
+            data.question.questionId;
+
+
+        // ----------------------------------------------------
+        // RESET ANSWER
+        // ----------------------------------------------------
+
+        answerInput.value =
+          '';
+
+
+        updateCharacterCounter();
+
+
+        document
+          .getElementById('studentMessage')
+          .innerText =
+            "";
+
+
+        submitBtn.disabled =
+          false;
+
+
+        // Put cursor in answer box
+
+        setTimeout(
+
+          () => {
+
+            answerInput.focus();
+
+          },
+
+          200
+        );
+
       }
-    })
-    .catch(error => {
-      msgEl.innerText = "Failed to publish question."; msgEl.style.color = "#d32f2f";
-    })
-    .finally(() => btn.disabled = false );
+
+
+      // ------------------------------------------------------
+      // SERVER ERROR
+      // ------------------------------------------------------
+
+      else {
+
+        throw new Error(
+          data.message ||
+          "Error loading question."
+        );
+      }
+
+    }
+
+  )
+
+  .catch(
+
+    error => {
+
+      console.error(error);
+
+
+      msgEl.innerText =
+        error.message ||
+        "Network error. Please try again.";
+
+
+      msgEl.style.color =
+        "#d32f2f";
+
+    }
+
+  )
+
+  .finally(
+
+    () => {
+
+      loginBtn.disabled =
+        false;
+
+    }
+
+  );
+}
+
+
+// ============================================================
+// CHARACTER COUNTER
+// ============================================================
+
+function updateCharacterCounter() {
+
+
+  const charCount =
+    answerInput.value.length;
+
+
+  charCounter.innerText =
+
+    `${charCount.toLocaleString()} / ${MAX_CHARS.toLocaleString()} characters`;
+
+
+  if (charCount > MAX_CHARS) {
+
+    charCounter.classList.add(
+      'over-limit'
+    );
+
+
+    submitBtn.disabled =
+      true;
+
   }
+
+  else {
+
+    charCounter.classList.remove(
+      'over-limit'
+    );
+
+
+    submitBtn.disabled =
+      false;
+  }
+}
+
+
+// ============================================================
+// ANSWER INPUT EVENT
+// ============================================================
+
+answerInput.addEventListener(
+
+  'input',
+
+  updateCharacterCounter
+
+);
+
+
+// ============================================================
+// SUBMIT STUDENT ANSWER
+// ============================================================
+
+function submitStudentAnswer() {
+
+
+  const studentId =
+    document
+      .getElementById('studentId')
+      .value
+      .trim();
+
+
+  const fullName =
+    document
+      .getElementById('fullName')
+      .value
+      .trim();
+
+
+  const answer =
+    answerInput
+      .value
+      .trim();
+
+
+  const questionId =
+    document
+      .getElementById('currentQuestionIdValue')
+      .value
+      .trim();
+
+
+  const msgEl =
+    document
+      .getElementById('studentMessage');
+
+
+  const resultCard =
+    document
+      .getElementById('resultCard');
+
+
+  // ----------------------------------------------------------
+  // VALIDATION
+  // ----------------------------------------------------------
+
+  if (!answer) {
+
+    msgEl.innerText =
+      "Please type an answer.";
+
+    msgEl.style.color =
+      "#d32f2f";
+
+    answerInput.focus();
+
+    return;
+  }
+
+
+  if (answer.length > MAX_CHARS) {
+
+    msgEl.innerText =
+      "Your answer exceeds the maximum character limit.";
+
+    msgEl.style.color =
+      "#d32f2f";
+
+    return;
+  }
+
+
+  // ----------------------------------------------------------
+  // SHOW LOADING
+  // ----------------------------------------------------------
+
+  resultCard.style.display =
+    "none";
+
+
+  msgEl.innerHTML = `
+
+    <span
+      class="loading-text"
+      style="color:#2196F3;"
+    >
+
+      <span
+        class="spinner"
+        style="
+          border-color:
+            rgba(33,150,243,0.25);
+          border-top-color:
+            #2196F3;
+        "
+      ></span>
+
+      AI is reading and grading your answer...
+      Please wait.
+
+    </span>
+
+  `;
+
+
+  submitBtn.disabled =
+    true;
+
+
+  // ----------------------------------------------------------
+  // SEND TO APPS SCRIPT
+  // ----------------------------------------------------------
+
+  fetch(
+
+    SCRIPT_URL,
+
+    {
+
+      method:
+        'POST',
+
+      body:
+        JSON.stringify({
+
+          action:
+            'submitAnswer',
+
+          studentId:
+            studentId,
+
+          fullName:
+            fullName,
+
+          answer:
+            answer,
+
+          questionId:
+            questionId
+
+        }),
+
+      headers: {
+
+        'Content-Type':
+          'text/plain;charset=utf-8'
+      }
+
+    }
+
+  )
+
+  .then(
+
+    response => {
+
+      if (!response.ok) {
+
+        throw new Error(
+          `Server returned HTTP ${response.status}`
+        );
+      }
+
+      return response.json();
+
+    }
+
+  )
+
+  .then(
+
+    data => {
+
+
+      // ------------------------------------------------------
+      // SUCCESS
+      // ------------------------------------------------------
+
+      if (data.status === 'success') {
+
+
+        const result =
+          data.scoreData;
+
+
+        // ----------------------------------------------------
+        // CLEAR MESSAGE
+        // ----------------------------------------------------
+
+        msgEl.innerText =
+          "";
+
+
+        // ----------------------------------------------------
+        // DISPLAY RESULT CARD
+        // ----------------------------------------------------
+
+        resultCard.style.display =
+          "block";
+
+
+        // Remove old classes
+
+        resultCard.classList.remove(
+          'pass',
+          'fail'
+        );
+
+
+        // ----------------------------------------------------
+        // ATTEMPT NUMBER
+        //
+        // IMPORTANT:
+        //
+        // This comes DIRECTLY from Apps Script.
+        //
+        // There is NO ++ counter here.
+        // Therefore it will match Column F.
+        // ----------------------------------------------------
+
+        document
+          .getElementById('attemptDisplay')
+          .innerText =
+            "Attempt " +
+            result.attempt;
+
+
+        // ----------------------------------------------------
+        // SCORE
+        // ----------------------------------------------------
+
+        document
+          .getElementById('scoreDisplay')
+          .innerText =
+
+            result.score +
+            " / " +
+            result.maxScore;
+
+
+        // ----------------------------------------------------
+        // PASSING GRADE
+        // ----------------------------------------------------
+
+        document
+          .getElementById('passingGradeDisplay')
+          .innerText =
+
+            "Passing grade: " +
+            result.passingGrade;
+
+
+        // ----------------------------------------------------
+        // FEEDBACK
+        // ----------------------------------------------------
+
+        document
+          .getElementById('feedbackDisplay')
+          .innerText =
+            result.feedback;
+
+
+        // ----------------------------------------------------
+        // STATUS
+        // ----------------------------------------------------
+
+        const statusBadge =
+          document
+            .getElementById('statusBadge');
+
+
+        const retryBtn =
+          document
+            .getElementById('retryBtn');
+
+
+        const nextQuestionBtn =
+          document
+            .getElementById('nextQuestionBtn');
+
+
+        const resultTitle =
+          document
+            .getElementById('resultTitle');
+
+
+        const successText =
+          document
+            .getElementById('successText');
+
+
+        // ----------------------------------------------------
+        // PASS
+        // ----------------------------------------------------
+
+        if (
+          result.status === "Pass"
+        ) {
+
+
+          resultCard.classList.add(
+            'pass'
+          );
+
+
+          statusBadge.className =
+            'status-badge status-pass';
+
+
+          statusBadge.innerText =
+            'PASS';
+
+
+          resultTitle.innerText =
+            '🎉 Congratulations!';
+
+
+          successText.innerText =
+            result.message;
+
+
+          successText.style.color =
+            "#2e7d32";
+
+
+          // Hide retry
+
+          retryBtn.style.display =
+            "none";
+
+
+          // Show next
+
+          nextQuestionBtn.style.display =
+            "block";
+
+
+          // Disable answer
+
+          answerInput.disabled =
+            true;
+
+
+          submitBtn.style.display =
+            "none";
+
+
+        }
+
+
+        // ----------------------------------------------------
+        // FAIL
+        // ----------------------------------------------------
+
+        else {
+
+
+          resultCard.classList.add(
+            'fail'
+          );
+
+
+          statusBadge.className =
+            'status-badge status-fail';
+
+
+          statusBadge.innerText =
+            'FAIL';
+
+
+          resultTitle.innerText =
+            'Please Try Again';
+
+
+          successText.innerText =
+            result.message;
+
+
+          successText.style.color =
+            "#e65100";
+
+
+          // Show retry
+
+          retryBtn.style.display =
+            "block";
+
+
+          // Hide next
+
+          nextQuestionBtn.style.display =
+            "none";
+
+
+          // Keep answer available
+
+          answerInput.disabled =
+            true;
+
+
+          submitBtn.style.display =
+            "none";
+        }
+
+
+        // Scroll result into view
+
+        setTimeout(
+
+          () => {
+
+            resultCard.scrollIntoView({
+
+              behavior:
+                'smooth',
+
+              block:
+                'start'
+            });
+
+          },
+
+          100
+        );
+
+      }
+
+
+      // ------------------------------------------------------
+      // SERVER ERROR
+      // ------------------------------------------------------
+
+      else {
+
+        throw new Error(
+          data.message ||
+          "Submission failed."
+        );
+      }
+
+    }
+
+  )
+
+  .catch(
+
+    error => {
+
+      console.error(error);
+
+
+      msgEl.innerText =
+        error.message ||
+        "Submission failed. Please try again.";
+
+
+      msgEl.style.color =
+        "#d32f2f";
+
+
+      submitBtn.disabled =
+        false;
+
+    }
+
+  )
+
+  .finally(
+
+    () => {
+
+      // Don't automatically enable submit
+      // after a successful result.
+
+      // The buttons are controlled by
+      // Pass/Fail logic above.
+
+    }
+
+  );
+}
+
+
+// ============================================================
+// RETRY SAME QUESTION
+// ============================================================
+
+function retrySameQuestion() {
+
+
+  const resultCard =
+    document
+      .getElementById('resultCard');
+
+
+  const msgEl =
+    document
+      .getElementById('studentMessage');
+
+
+  const retryBtn =
+    document
+      .getElementById('retryBtn');
+
+
+  // ----------------------------------------------------------
+  // HIDE RESULT
+  // ----------------------------------------------------------
+
+  resultCard.style.display =
+    "none";
+
+
+  // ----------------------------------------------------------
+  // ENABLE ANSWER
+  // ----------------------------------------------------------
+
+  answerInput.disabled =
+    false;
+
+
+  submitBtn.style.display =
+    "block";
+
+
+  submitBtn.disabled =
+    false;
+
+
+  // ----------------------------------------------------------
+  // CLEAR ANSWER
+  // ----------------------------------------------------------
+
+  answerInput.value =
+    "";
+
+
+  updateCharacterCounter();
+
+
+  // ----------------------------------------------------------
+  // CLEAR MESSAGE
+  // ----------------------------------------------------------
+
+  msgEl.innerText =
+    "Please improve your answer based on the feedback and try again.";
+
+
+  msgEl.style.color =
+    "#e65100";
+
+
+  // ----------------------------------------------------------
+  // FOCUS ANSWER
+  // ----------------------------------------------------------
+
+  answerInput.focus();
+
+
+  // ----------------------------------------------------------
+  // SCROLL TO ANSWER
+  // ----------------------------------------------------------
+
+  answerInput.scrollIntoView({
+
+    behavior:
+      'smooth',
+
+    block:
+      'center'
+  });
+}
+
+
+// ============================================================
+// HTML ESCAPE
+//
+// Used only for displaying student information.
+// ============================================================
+
+function escapeHtml(value) {
+
+  if (value === null ||
+      value === undefined) {
+
+    return "";
+  }
+
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+}
+
+
+// ============================================================
+// ENTER KEY SUPPORT
+//
+// Student can press Ctrl + Enter to submit.
+// Normal Enter still creates a new line.
+// ============================================================
+
+answerInput.addEventListener(
+
+  'keydown',
+
+  function(event) {
+
+    if (
+      event.ctrlKey &&
+      event.key === 'Enter'
+    ) {
+
+      event.preventDefault();
+
+
+      if (
+        !submitBtn.disabled &&
+        submitBtn.style.display !== "none"
+      ) {
+
+        submitStudentAnswer();
+      }
+    }
+
+  }
+
+);
+
+
+// ============================================================
+// INITIAL PAGE STATE
+// ============================================================
+
+document
+  .getElementById('loginSection')
+  .style.display =
+    "block";
+
+
+document
+  .getElementById('assessmentSection')
+  .style.display =
+    "none";
+
+
+document
+  .getElementById('allDoneSection')
+  .style.display =
+    "none";
+
+
+// ============================================================
+// ALLOW ENTER IN LOGIN FIELDS
+// ============================================================
+
+document
+  .getElementById('studentId')
+  .addEventListener(
+
+    'keydown',
+
+    function(event) {
+
+      if (event.key === 'Enter') {
+
+        event.preventDefault();
+
+        document
+          .getElementById('fullName')
+          .focus();
+      }
+
+    }
+
+  );
+
+
+document
+  .getElementById('fullName')
+  .addEventListener(
+
+    'keydown',
+
+    function(event) {
+
+      if (event.key === 'Enter') {
+
+        event.preventDefault();
+
+        fetchNextQuestion();
+      }
+
+    }
+
+  );
+
 </script>
 
+
 </body>
+
 </html>
