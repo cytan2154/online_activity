@@ -5,53 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Assessment Portal</title>
   <style>
-    /* Base styles & Reset */
     * { box-sizing: border-box; }
-    
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-      margin: 0; 
-      padding: 15px; 
-      background-color: #f4f7f6; 
-    }
-    
-    /* Main Container */
-    .container { 
-      width: 100%; max-width: 600px; margin: 40px auto; background: white; 
-      padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
-    }
-    
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 15px; background-color: #f4f7f6; }
+    .container { width: 100%; max-width: 600px; margin: 40px auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
     h2 { color: #333; border-bottom: 2px solid #4CAF50; padding-bottom: 10px; margin-top: 0; font-size: 1.5rem; }
     
-    /* Form Elements */
     .form-group { margin-bottom: 18px; }
     label { display: block; font-weight: bold; margin-bottom: 8px; color: #444; font-size: 0.95rem; }
-    
-    input[type="text"], textarea { 
-      width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; 
-      font-family: inherit; font-size: 16px; background-color: #fafafa;
-    }
+    input[type="text"], textarea { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; font-size: 16px; background-color: #fafafa; }
     input:focus, textarea:focus { outline: none; border-color: #4CAF50; background-color: #fff; box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2); }
     
-    /* Character Counter */
-    .char-counter {
-      text-align: right;
-      font-size: 0.85rem;
-      color: #777;
-      margin-top: 5px;
-      font-weight: bold;
-    }
+    .char-counter { text-align: right; font-size: 0.85rem; color: #777; margin-top: 5px; font-weight: bold; }
     .char-counter.over-limit { color: #d32f2f; }
 
-    /* Submit Button */
-    button.submit-btn { 
-      background-color: #4CAF50; color: white; padding: 16px 20px; 
-      border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; margin-top: 10px;
-    }
-    button.submit-btn:hover { background-color: #45a049; }
+    button.primary-btn { background-color: #4CAF50; color: white; padding: 16px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; margin-top: 10px; }
+    button.primary-btn:hover { background-color: #45a049; }
     button:disabled { background-color: #999; cursor: not-allowed; }
     
-    /* Messages & Cards */
     .message { margin-top: 15px; font-weight: bold; text-align: center; min-height: 20px; }
     .question-box { background: #fff3e0; padding: 15px; border-left: 5px solid #ff9800; margin-bottom: 25px; border-radius: 8px; }
     .q-id-badge { background: #ff9800; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-bottom: 10px; display: inline-block; }
@@ -60,6 +30,9 @@
     #resultCard { display: none; margin-top: 20px; padding: 20px; background: #e7f3fe; border-left: 6px solid #2196F3; border-radius: 8px; text-align: center; }
     #resultCard h3 { margin-top: 0; color: #0d47a1; }
     .score-highlight { font-size: 32px; font-weight: bold; color: #d32f2f; display: block; margin: 10px 0; }
+
+    /* Sections Control */
+    #assessmentSection, #allDoneSection { display: none; }
 
     @media (max-width: 480px) {
       body { padding: 10px; }
@@ -73,84 +46,124 @@
 <div class="container">
   <h2>Student Assessment</h2>
   
-  <div class="question-box">
-    <span class="q-id-badge" id="displayQuestionId">Loading...</span>
-    <strong>Current Question:</strong>
-    <p id="displayQuestionText">Loading question...</p>
-    <input type="hidden" id="currentQuestionIdValue">
+  <!-- STEP 1: LOGIN SECTION -->
+  <div id="loginSection">
+    <p>Please enter your details to fetch your next question.</p>
+    <div class="form-group">
+      <label>Student ID:</label>
+      <input type="text" id="studentId" placeholder="e.g. 123456">
+    </div>
+    <div class="form-group">
+      <label>Full Name:</label>
+      <input type="text" id="fullName" placeholder="John Doe">
+    </div>
+    <button class="primary-btn" onclick="fetchNextQuestion()" id="loginBtn">Start Assessment</button>
+    <p class="message" id="loginMessage"></p>
   </div>
 
-  <div class="form-group">
-    <label>Student ID:</label>
-    <input type="text" id="studentId" placeholder="e.g. 123456">
-  </div>
-  <div class="form-group">
-    <label>Full Name:</label>
-    <input type="text" id="fullName" placeholder="John Doe">
-  </div>
-  <div class="form-group">
-    <label>Your Answer:</label>
-    <!-- maxlength physically prevents typing past 50,000 characters -->
-    <textarea id="answer" rows="5" placeholder="Type your answer here..." maxlength="50000"></textarea>
-    <!-- Character Counter Display -->
-    <div class="char-counter" id="charCounter">0 / 50,000 characters</div>
-  </div>
-  
-  <button class="submit-btn" onclick="submitStudentAnswer()" id="studentSubmitBtn">Submit Answer</button>
-  <p class="message" id="studentMessage"></p>
+  <!-- STEP 2: ASSESSMENT SECTION -->
+  <div id="assessmentSection">
+    <div class="question-box">
+      <span class="q-id-badge" id="displayQuestionId"></span>
+      <strong>Current Question:</strong>
+      <p id="displayQuestionText"></p>
+      <input type="hidden" id="currentQuestionIdValue">
+    </div>
 
-  <div id="resultCard">
-    <h3>Marking Complete</h3>
-    <p>Your Score:</p>
-    <span class="score-highlight" id="scoreDisplay"></span>
-    <p id="successText" style="color: green; font-weight: bold; margin-bottom: 0;"></p>
+    <div class="form-group">
+      <label>Your Answer:</label>
+      <textarea id="answer" rows="6" placeholder="Type your answer here..." maxlength="50000"></textarea>
+      <div class="char-counter" id="charCounter">0 / 50,000 characters</div>
+    </div>
+    
+    <button class="primary-btn" onclick="submitStudentAnswer()" id="studentSubmitBtn">Submit Answer</button>
+    <p class="message" id="studentMessage"></p>
+
+    <div id="resultCard">
+      <h3>Marking Complete</h3>
+      <p>Your Score:</p>
+      <span class="score-highlight" id="scoreDisplay"></span>
+      <p id="successText" style="color: green; font-weight: bold; margin-bottom: 15px;"></p>
+      <!-- Button to immediately load the next question -->
+      <button class="primary-btn" onclick="fetchNextQuestion()" style="background-color: #2196F3;">Load Next Question</button>
+    </div>
   </div>
+
+  <!-- STEP 3: ALL DONE SECTION -->
+  <div id="allDoneSection" style="text-align: center; padding: 30px 10px;">
+    <h3 style="color: #4CAF50;">🎉 You're all caught up!</h3>
+    <p>You have answered all available questions.</p>
+  </div>
+
 </div>
 
 <script>
   // IMPORTANT: Paste your Apps Script Web App URL here
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzc-3bJhr3-79deJ4jaUx8xw6ZdcADXY4h8LALRf3hZh4XhEPMyaAYwhuxEJe1h95MW/exec'; 
-  
-  // Google Sheets absolute maximum cell character limit
   const MAX_CHARS = 50000; 
 
-  window.onload = function() {
-    // Initialize character counter text
-    document.getElementById('charCounter').innerText = `0 / ${MAX_CHARS.toLocaleString()} characters`;
+  function fetchNextQuestion() {
+    const studentId = document.getElementById('studentId').value.trim();
+    const fullName = document.getElementById('fullName').value.trim();
+    const msgEl = document.getElementById('loginMessage');
+    const loginBtn = document.getElementById('loginBtn');
     
+    if(!studentId || !fullName) {
+      msgEl.innerText = "Please enter both ID and Name."; msgEl.style.color = "#d32f2f"; return;
+    }
+
+    msgEl.innerText = "Finding your next question..."; msgEl.style.color = "#2196F3";
+    loginBtn.disabled = true;
+
     fetch(SCRIPT_URL, {
       method: 'POST',
-      body: JSON.stringify({ action: 'getQuestion' }),
+      body: JSON.stringify({ action: 'getQuestion', studentId: studentId }),
       headers: { 'Content-Type': 'text/plain;charset=utf-8' }
     })
     .then(response => response.json())
     .then(data => {
       if(data.status === 'success') {
-        document.getElementById('displayQuestionText').innerText = data.question.questionText;
-        document.getElementById('displayQuestionId').innerText = data.question.questionId;
-        document.getElementById('currentQuestionIdValue').value = data.question.questionId;
+        if(data.question === "ALL_DONE" || data.question === null) {
+          // Hide other sections, show all done
+          document.getElementById('loginSection').style.display = "none";
+          document.getElementById('assessmentSection').style.display = "none";
+          document.getElementById('allDoneSection').style.display = "block";
+        } else {
+          // Hide login, show question
+          document.getElementById('loginSection').style.display = "none";
+          document.getElementById('assessmentSection').style.display = "block";
+          document.getElementById('resultCard').style.display = "none"; // Hide result card if loading next
+          
+          document.getElementById('displayQuestionText').innerText = data.question.questionText;
+          document.getElementById('displayQuestionId').innerText = data.question.questionId;
+          document.getElementById('currentQuestionIdValue').value = data.question.questionId;
+          
+          // Reset answer field
+          document.getElementById('answer').value = '';
+          document.getElementById('charCounter').innerText = `0 / ${MAX_CHARS.toLocaleString()} characters`;
+          document.getElementById('studentMessage').innerText = "";
+        }
+      } else {
+        msgEl.innerText = "Error loading question."; msgEl.style.color = "#d32f2f";
       }
     })
     .catch(err => {
-      document.getElementById('displayQuestionText').innerText = "Failed to load question.";
-    });
-  };
+      msgEl.innerText = "Network error. Try again."; msgEl.style.color = "#d32f2f";
+    })
+    .finally(() => loginBtn.disabled = false );
+  }
 
-  // Real-time character counting logic
   document.getElementById('answer').addEventListener('input', function() {
     const charCount = this.value.length;
-    
     const charCounterEl = document.getElementById('charCounter');
     const submitBtn = document.getElementById('studentSubmitBtn');
     
     charCounterEl.innerText = `${charCount.toLocaleString()} / ${MAX_CHARS.toLocaleString()} characters`;
     
     if (charCount > MAX_CHARS) {
-      charCounterEl.classList.add('over-limit');
-      submitBtn.disabled = true;
+      charCounterEl.classList.add('over-limit'); submitBtn.disabled = true;
     } else {
-      charCounterEl.classList.remove('over-limit');
-      submitBtn.disabled = false;
+      charCounterEl.classList.remove('over-limit'); submitBtn.disabled = false;
     }
   });
 
@@ -164,19 +177,12 @@
     const btn = document.getElementById('studentSubmitBtn');
     const resultCard = document.getElementById('resultCard');
     
-    // Double check character count before submitting
-    if(answer.length > MAX_CHARS) {
-      msgEl.innerText = `Please keep your answer under ${MAX_CHARS.toLocaleString()} characters.`; 
-      msgEl.style.color = "#d32f2f"; 
-      return;
-    }
-    
-    if(!studentId || !fullName || !answer) {
-      msgEl.innerText = "Please fill in all fields."; msgEl.style.color = "#d32f2f"; return;
+    if(!answer) {
+      msgEl.innerText = "Please type an answer."; msgEl.style.color = "#d32f2f"; return;
     }
     
     resultCard.style.display = "none";
-    msgEl.innerText = "Submitting and marking..."; msgEl.style.color = "#2196F3";
+    msgEl.innerText = "AI is reading and grading your essay... please wait."; msgEl.style.color = "#2196F3";
     btn.disabled = true;
 
     fetch(SCRIPT_URL, {
@@ -191,9 +197,6 @@
         resultCard.style.display = "block";
         document.getElementById('scoreDisplay').innerText = data.scoreData.score + " / " + data.scoreData.maxScore;
         document.getElementById('successText').innerText = data.scoreData.message;
-        
-        document.getElementById('answer').value = ''; 
-        document.getElementById('charCounter').innerText = `0 / ${MAX_CHARS.toLocaleString()} characters`; // Reset counter
       } else {
         msgEl.innerText = data.message; msgEl.style.color = "#d32f2f";
       }
